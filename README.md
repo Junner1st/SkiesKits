@@ -1,7 +1,7 @@
 # SkiesKits
 <img height="50" src="https://camo.githubusercontent.com/a94064bebbf15dfed1fddf70437ea2ac3521ce55ac85650e35137db9de12979d/68747470733a2f2f692e696d6775722e636f6d2f6331444839564c2e706e67" alt="Requires Fabric Kotlin"/>
 
-A Fabric (1.20.1) server-sided Kits mod! Creating a new kit is as easy as creating a new file in the `kits` folder and copying the basic formatting.
+A Fabric (1.21.11) server-sided Kits mod! Creating a new kit is as easy as creating a new file in the `kits` folder and copying the basic formatting.
 
 More information on configuration can be found on the [Wiki](https://github.com/PokeSkies/SkiesKits/wiki)!
 
@@ -18,7 +18,6 @@ More information on configuration can be found on the [Wiki](https://github.com/
 2. Download all required dependencies:
    - [Fabric Language Kotlin](https://modrinth.com/mod/fabric-language-kotlin)
 3. Download any optional dependencies:
-   - [Impactor](https://modrinth.com/mod/impactor) **_(Economy, Placeholders)_**
    - Pebbles Economy **_(Economy)_**
    - [MiniPlaceholders](https://modrinth.com/plugin/miniplaceholders) **_(Placeholders)_**
    - [PlaceholderAPI](https://modrinth.com/mod/placeholder-api) **_(Placeholders)_**

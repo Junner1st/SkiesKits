@@ -1,5 +1,6 @@
 package com.pokeskies.skieskits.config.actions.types
 
+import com.pokeskies.skieskits.SkiesKits
 import com.pokeskies.skieskits.config.Kit
 import com.pokeskies.skieskits.config.actions.Action
 import com.pokeskies.skieskits.config.actions.ActionType
@@ -9,7 +10,6 @@ import com.pokeskies.skieskits.utils.Utils
 import eu.pb4.sgui.api.gui.SimpleGui
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundSource
 
 class PlaySound(
     delay: Long = 0,
@@ -25,8 +25,8 @@ class PlaySound(
             Utils.printError("There was an error while executing a Sound Action for player ${player.name}: Sound was somehow null?")
             return
         }
-        if (!player.server.isStopped) {
-            player.playNotifySound(sound, SoundSource.MASTER, volume, pitch)
+        if (!SkiesKits.INSTANCE.server.isStopped) {
+            player.playSound(sound, volume, pitch)
         }
     }
 

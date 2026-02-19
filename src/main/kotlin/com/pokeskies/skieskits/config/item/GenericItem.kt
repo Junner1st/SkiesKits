@@ -2,8 +2,8 @@ package com.pokeskies.skieskits.config.item
 
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
+import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
-import com.mojang.authlib.properties.PropertyMap
 import com.pokeskies.skieskits.SkiesKits
 import com.pokeskies.skieskits.config.Kit
 import com.pokeskies.skieskits.data.KitData
@@ -14,7 +14,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -46,7 +46,10 @@ open class GenericItem(
         val dataComponents = DataComponentPatch.builder()
 
         if (customModelData != null) {
-            dataComponents.set(DataComponents.CUSTOM_MODEL_DATA, CustomModelData(customModelData))
+            dataComponents.set(
+                DataComponents.CUSTOM_MODEL_DATA,
+                CustomModelData(listOf(customModelData.toFloat()), emptyList(), emptyList(), emptyList())
+            )
         }
 
         if (name != null)
@@ -97,10 +100,10 @@ open class GenericItem(
                         }
                     } else {
                         // CASE: Game Profile format
-                        val properties = PropertyMap()
-                        properties.put("textures", Property("textures", arg))
+                        val profile = GameProfile(UUID.randomUUID(), "skieskits_head")
+                        profile.properties().put("textures", Property("textures", arg))
                         headStack.applyComponents(DataComponentPatch.builder()
-                            .set(DataComponents.PROFILE, ResolvableProfile(Optional.empty(), Optional.empty(), properties))
+                            .set(DataComponents.PROFILE, ResolvableProfile.createResolved(profile))
                             .build())
                         return headStack
                     }
@@ -111,22 +114,19 @@ open class GenericItem(
             }
 
             if (uuid != null) {
-                val gameProfile = SkiesKits.INSTANCE.server.profileCache?.get(uuid)
-                if (gameProfile != null && gameProfile.isPresent) {
-                    headStack.applyComponents(DataComponentPatch.builder()
-                        .set(DataComponents.PROFILE, ResolvableProfile(gameProfile.get()))
-                        .build())
-                    return headStack
-                }
+                headStack.applyComponents(DataComponentPatch.builder()
+                    .set(DataComponents.PROFILE, ResolvableProfile.createUnresolved(uuid))
+                    .build())
+                return headStack
             }
 
             Utils.printError("Error while attempting to parse Player Head: $parsedItem")
             return headStack
         }
 
-        val newItem = BuiltInRegistries.ITEM.getOptional(ResourceLocation.parse(parsedItem))
+        val newItem = BuiltInRegistries.ITEM.getOptional(Identifier.parse(parsedItem))
 
-        if (newItem.isEmpty) {
+        if (newItem.isEmpty()) {
             Utils.printError("Error while getting Item, defaulting to AIR: $parsedItem")
             return ItemStack(Items.AIR, amount)
         }

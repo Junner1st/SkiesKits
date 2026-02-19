@@ -10,6 +10,8 @@ import com.pokeskies.skieskits.data.KitData
 import com.pokeskies.skieskits.utils.Utils
 import eu.pb4.sgui.api.gui.SimpleGui
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.permissions.LevelBasedPermissionSet
+import net.minecraft.server.permissions.PermissionLevel
 
 class CommandPlayer(
     delay: Long = 0,
@@ -25,7 +27,8 @@ class CommandPlayer(
         var source = player.createCommandSourceStack()
 
         if (permissionLevel != null) {
-            source = source.withPermission(permissionLevel)
+            val level = PermissionLevel.byId(permissionLevel.coerceIn(0, 4))
+            source = source.withPermission(LevelBasedPermissionSet.forLevel(level))
         }
 
         for (command in commands) {

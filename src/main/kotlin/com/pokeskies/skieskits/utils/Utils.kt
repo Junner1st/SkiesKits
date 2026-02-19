@@ -11,7 +11,7 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minecraft.core.Registry
 import net.minecraft.network.chat.Component
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
 import java.lang.reflect.Type
 
@@ -66,10 +66,10 @@ object Utils {
     }
 
     // Thank you to Patbox for these wonderful serializers =)
-    data class RegistrySerializer<T>(val registry: Registry<T>) : JsonSerializer<T>, JsonDeserializer<T> {
+    data class RegistrySerializer<T : Any>(val registry: Registry<T>) : JsonSerializer<T>, JsonDeserializer<T> {
         @Throws(JsonParseException::class)
         override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): T? {
-            val parsed = if (json.isJsonPrimitive) registry.get(ResourceLocation.parse(json.asString)) else null
+            val parsed = if (json.isJsonPrimitive) registry.getOptional(Identifier.parse(json.asString)).orElse(null) else null
             if (parsed == null)
                 printError("There was an error while deserializing a Registry Type: $registry")
             return parsed
