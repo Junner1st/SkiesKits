@@ -53,7 +53,7 @@ open class GenericItem(
         }
 
         if (name != null)
-            dataComponents.set(DataComponents.ITEM_NAME, Utils.deserializeText(Utils.parsePlaceholders(player, name, null, null, null)))
+            dataComponents.set(DataComponents.ITEM_NAME, Utils.deserializeNativeText(Utils.parsePlaceholders(player, name, null, null, null)))
 
         if (lore.isNotEmpty()) {
             val parsedLore: MutableList<String> = mutableListOf()
@@ -65,7 +65,7 @@ open class GenericItem(
                 }
             }
             dataComponents.set(DataComponents.LORE, ItemLore(parsedLore.stream().map {
-                Component.empty().withStyle { it.withItalic(false) }.append(Utils.deserializeText(it)) as Component
+                Component.empty().withStyle { style -> style.withItalic(false) }.append(Utils.deserializeNativeText(it)) as Component
             }.toList()))
         }
 

@@ -62,7 +62,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"].toString()}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.properties["fabric_version"].toString()}")
 
-    modImplementation(include("net.kyori:adventure-platform-fabric:5.14.2")!!)
+    modImplementation(include("net.kyori:adventure-platform-fabric:6.8.0")!!)
 
     modImplementation("me.lucko:fabric-permissions-api:0.3.1")?.let {
         include(it)

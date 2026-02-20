@@ -7,12 +7,12 @@ import com.pokeskies.skieskits.SkiesKits
 import com.pokeskies.skieskits.config.ConfigManager
 import com.pokeskies.skieskits.config.Kit
 import com.pokeskies.skieskits.data.KitData
-import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.minecraft.core.Registry
-import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.network.chat.Component as NativeComponent
 import java.lang.reflect.Type
 
 object Utils {
@@ -24,10 +24,16 @@ object Utils {
     }
 
     fun deserializeText(text: String): Component {
-        return SkiesKits.INSTANCE.adventure!!.toNative(
-            miniMessage.deserialize(text)
-            .applyFallbackStyle({ it.decoration(TextDecoration.ITALIC, false) })
-        )
+        return miniMessage.deserialize(text)
+    }
+
+    fun deserializeNativeText(text: String): NativeComponent {
+        val adventure = SkiesKits.INSTANCE.adventure
+        return if (adventure != null) {
+            adventure.asNative(deserializeText(text))
+        } else {
+            NativeComponent.literal(text)
+        }
     }
 
     fun printDebug(message: String?, bypassCheck: Boolean = false) {

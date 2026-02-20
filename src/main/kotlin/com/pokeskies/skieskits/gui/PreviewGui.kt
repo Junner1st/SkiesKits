@@ -90,6 +90,6 @@ class PreviewGui(
     }
 
     override fun getTitle(): Component {
-        return Utils.deserializeText(Utils.parsePlaceholders(player, preview.title, kit.id, kit, null))
+        return Utils.deserializeNativeText(Utils.parsePlaceholders(player, preview.title, kit.id, kit, null))
     }
 }
