@@ -60,7 +60,10 @@ class TakeItem(
         val nbtCopy = nbt?.copy()
 
         if (strict && nbtCopy != null) {
-            val checkNBT = DataComponentPatch.CODEC.encodeStart(SkiesKits.INSTANCE.nbtOpts, checkItem.componentsPatch).result().getOrNull() ?: return false
+            val checkNBT = DataComponentPatch.CODEC.encodeStart(SkiesKits.INSTANCE.nbtOpts, checkItem.componentsPatch)
+                .resultOrPartial { error ->
+                    Utils.printError("Failed to encode TakeItem components for item '$item': $error")
+                }.getOrNull() ?: return false
 
             if (checkNBT != nbtCopy)
                 return false

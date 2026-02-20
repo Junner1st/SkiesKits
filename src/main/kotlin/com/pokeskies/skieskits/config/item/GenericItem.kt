@@ -38,7 +38,11 @@ open class GenericItem(
         val stack = getBaseItem(player) ?: return null
 
         if (components != null) {
-            DataComponentPatch.CODEC.decode(SkiesKits.INSTANCE.nbtOpts, components).result().ifPresent { result ->
+            val decoded = DataComponentPatch.CODEC.decode(SkiesKits.INSTANCE.nbtOpts, components)
+                .resultOrPartial { error ->
+                    Utils.printError("Failed to decode item components for item '$item': $error | components=$components")
+                }
+            decoded.ifPresent { result ->
                 stack.applyComponents(result.first)
             }
         }

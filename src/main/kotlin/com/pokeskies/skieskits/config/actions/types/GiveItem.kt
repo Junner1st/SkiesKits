@@ -34,7 +34,11 @@ class GiveItem(
         val nbtCopy = nbt?.copy()
 
         if (nbtCopy != null) {
-            DataComponentPatch.CODEC.decode(SkiesKits.INSTANCE.nbtOpts, nbtCopy).result().ifPresent { result ->
+            val decoded = DataComponentPatch.CODEC.decode(SkiesKits.INSTANCE.nbtOpts, nbtCopy)
+                .resultOrPartial { error ->
+                    Utils.printError("Failed to decode GiveItem components for item '$item': $error | nbt=$nbtCopy")
+                }
+            decoded.ifPresent { result ->
                 itemStack.applyComponents(result.first)
             }
         }

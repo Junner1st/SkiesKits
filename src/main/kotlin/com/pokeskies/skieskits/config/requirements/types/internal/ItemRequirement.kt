@@ -77,7 +77,10 @@ class ItemRequirement(
         val nbtCopy = nbt?.copy()
 
         if (strict && nbtCopy != null) {
-            val checkNBT = DataComponentPatch.CODEC.encodeStart(SkiesKits.INSTANCE.nbtOpts, checkItem.componentsPatch).result().getOrNull() ?: return false
+            val checkNBT = DataComponentPatch.CODEC.encodeStart(SkiesKits.INSTANCE.nbtOpts, checkItem.componentsPatch)
+                .resultOrPartial { error ->
+                    Utils.printError("Failed to encode ItemRequirement components for item '$item': $error")
+                }.getOrNull() ?: return false
 
             if (checkNBT != nbtCopy) {
                 Utils.printDebug("[REQUIREMENT - ${type?.name}] Failed due to NBT not matching. Looking for: $nbtCopy, but found: $checkNBT")
